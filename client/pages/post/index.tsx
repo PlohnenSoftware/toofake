@@ -91,42 +91,6 @@ export default function Post() {
                 setTimeout(() => { setFailure("") }, 5000);
             }
         )
-
-        /* 
-        const formData = new FormData();
-        formData.append('primaryb64', primarybase64);
-        formData.append('secondaryb64', secondarybase64);
-        formData.append('caption', caption ? caption : "");
-        formData.append('token', authorization_token!);
-        console.log(formData);
-
-        let options = {
-            url: "/api/add/post",
-            method: "POST",
-            headers: { 'Content-Type': "multipart/form-data" },
-            data: {
-                primaryb64: primarybase64,
-                secondaryb64: secondarybase64,
-                caption: caption,
-                token: authorization_token
-            }
-        }
-
-        axios.request(options).then(
-            (response) => {
-                console.log(response.data);
-                setLoading(false);
-                setSuccess("Successfully posted!");
-                setTimeout(() => { setSuccess(""); router.push("/feed")}, 3000);
-            }
-        ).catch(
-            (error) => {
-                console.log(error);
-                setLoading(false);
-                setFailure(error.response.data.error)
-                setTimeout(() => { setFailure("") }, 5000);
-            }
-        ) */
     }
 
     return (

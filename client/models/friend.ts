@@ -12,7 +12,7 @@ class Friend extends User {
 
     static create(rawuser: any) {
         let username = rawuser.username;
-        let pfp = rawuser.profilePicture == undefined ? "" : rawuser.profilePicture.url; 
+        let pfp = rawuser.profilePicture == undefined ? "" : rawuser.profilePicture.url;
         let uid = rawuser.id;
         let status = rawuser.status;
         let fullname = rawuser.fullname;

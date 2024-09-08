@@ -28,15 +28,15 @@ export default function Instant({ instance, mymojis }: _Instant) {
     let [comment, setComment] = useState<string>("");
     let [commentLoading, setCommentLoading] = useState<boolean>(false);
     let [location, setLocation] = useState<string | JSX.Element>("loading...");
-	let [music, setMusic] = useState<string | JSX.Element>("loading...");
+    let [music, setMusic] = useState<string | JSX.Element>("loading...");
 
     function sendComment() {
         setCommentLoading(true);
 
         let token = localStorage.getItem("token");
-        let body = JSON.stringify({ 
-            "token": token, 
-            "instance_id": instance.instanceid, 
+        let body = JSON.stringify({
+            "token": token,
+            "instance_id": instance.instanceid,
             "poster_user_id": instance.user.uid,
             "comment": comment
         });
@@ -92,63 +92,63 @@ export default function Instant({ instance, mymojis }: _Instant) {
         else { return <div className={s.letter}>{instance.user.username.toUpperCase().charAt(0)}</div> }
     }
 
-   async function getLocation() {
-    if (instance.location == undefined) {
-        setLocation("No location data");
-        return;
+    async function getLocation() {
+        if (instance.location == undefined) {
+            setLocation("No location data");
+            return;
+        }
+
+        let lat = instance.location.latitude;
+        let long = instance.location.longitude;
+        /* console.log(lat, long); */
+
+        try {
+            let response = await axios.get(
+                `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=${long},${lat}&outSR=&forStorage=false&f=pjson`
+            )
+            /* console.log(response.data) */
+            const address = response.data.address.Address;
+            const city = response.data.address.City;
+            const locationString = `${address}, ${city}`;
+            const googleMapsLink = `https://www.google.com/maps?q=${lat},${long}`;
+
+            setLocation(
+                <a href={googleMapsLink} target="_blank" rel="noopener noreferrer">{locationString}</a>
+            );
+        } catch (error) {
+            console.log(error);
+            setLocation("No location data");
+        }
     }
 
-    let lat = instance.location.latitude;
-    let long = instance.location.longitude;
-    /* console.log(lat, long); */
+    async function getMusicData() {
+        if (instance.music === undefined) {
+            setMusic(<div className={s.noMusicTitle}>No music data</div>);
+            return;
+        }
 
-    try {
-        let response = await axios.get(
-            `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?location=${long},${lat}&outSR=&forStorage=false&f=pjson`
-        )
-        /* console.log(response.data) */
-        const address = response.data.address.Address;
-        const city = response.data.address.City;
-        const locationString = `${address}, ${city}`;
-        const googleMapsLink = `https://www.google.com/maps?q=${lat},${long}`;
+        const { artwork: coverArt, track: songTitle, artist: songArtist, provider: musicProvider, openUrl: musicUrl } = instance.music;
 
-        setLocation(
-            <a href={googleMapsLink} target="_blank" rel="noopener noreferrer">{locationString}</a>
-        );
-    } catch (error) {
-        console.log(error);
-        setLocation("No location data");
+        try {
+            setMusic(
+                <div
+                    className={s.musicContainer}
+                    onClick={() => window.open(musicUrl, '_blank')}
+                    title={`Open in ${musicProvider}`}
+                >
+                    <img src={coverArt} alt="Cover Art" className={s.musicCoverArt} />
+                    <div className={s.musicDetails}>
+                        <div className={s.musicTitle}>🎵 {songTitle}</div>
+                        <div className={s.musicArtist}>by {songArtist}</div>
+                    </div>
+                </div>
+            );
+        } catch (error) {
+            console.log(error);
+            setMusic(<p className={s.noMusicTitle}>No music data</p>);
+        }
     }
-}
 
-async function getMusicData() {
-    if (instance.music === undefined) {
-        setMusic( <div className={s.noMusicTitle}>No music data</div> );
-        return;
-    }
-
-    const { artwork: coverArt, track: songTitle, artist: songArtist, provider: musicProvider, openUrl: musicUrl } = instance.music;
-
-    try {
-        setMusic(
-            <div 
-				className={s.musicContainer} 
-				onClick={() => window.open(musicUrl, '_blank')}
-				title={`Open in ${musicProvider}`}
-			>
-				<img src={coverArt} alt="Cover Art" className={s.musicCoverArt} />
-				<div className={s.musicDetails}>
-					<div className={s.musicTitle}>🎵 {songTitle}</div>
-					<div className={s.musicArtist}>by {songArtist}</div>
-				</div>
-			</div>
-        );
-    } catch (error) {
-        console.log(error);
-        setMusic( <p className={s.noMusicTitle}>No music data</p> );
-    }
-}
-    
     let [reactionSuccess, setReactionSuccess] = useState<boolean>(false);
     let [reactionFailure, setReactionFailure] = useState<boolean>(false);
     let [addingmoji, setAddingmoji] = useState<boolean>(false);
@@ -177,10 +177,10 @@ async function getMusicData() {
                 setReactionSuccess(true);
                 setTimeout(() => { setReactionSuccess(false); router.reload() }, 2000);
             }
-        ).catch((error) => { 
-            console.log(error); 
-            setReactionLoading(false); 
-            setReactionFailure(true); 
+        ).catch((error) => {
+            console.log(error);
+            setReactionLoading(false);
+            setReactionFailure(true);
             setTimeout(() => { setReactionFailure(false) }, 2000);
         })
     }
@@ -212,14 +212,14 @@ async function getMusicData() {
 
         link.click();
         link2.click();
-        
+
         document.body.removeChild(link);
         document.body.removeChild(link2);
     }
 
     useEffect(() => {
         getLocation();
-		getMusicData();
+        getMusicData();
     }, [])
 
     let carouselRef = createRef<Carousel>();
@@ -233,7 +233,7 @@ async function getMusicData() {
                 </div>
                 <div className={s.details}>
                     <div className={s.username}><Link href={profile_link}> @{instance.user.username} </Link></div>
-					<div> {music} </div>
+                    <div> {music} </div>
                     <div className={s.location}> {location} </div>
                     <div className={s.timeposted}>{instance.creationdate}</div>
                 </div>
@@ -252,84 +252,84 @@ async function getMusicData() {
                         </div>
                 }
                 {
-                    instance.btsMedia != undefined ? 
-                    <div className={s.btsView} onClick={viewBts} title="Click to view the BTS">
-                        <FontAwesomeIcon icon={faPlayCircle} />
-                    </div>
-                    :
-                    <div></div>
+                    instance.btsMedia != undefined ?
+                        <div className={s.btsView} onClick={viewBts} title="Click to view the BTS">
+                            <FontAwesomeIcon icon={faPlayCircle} />
+                        </div>
+                        :
+                        <div></div>
                 }
             </div>
 
             <div className={s.content}>
-                <img src={swap ? instance.primary : instance.secondary} className={s.primary} onClick={() => setSwap(!swap)}/>
+                <img src={swap ? instance.primary : instance.secondary} className={s.primary} onClick={() => setSwap(!swap)} />
                 <div className={s.bounds} onClick={() => setSwap(!swap)} onMouseDown={(e) => { e.stopPropagation() }}>
                     <Draggable axis="both" bounds="parent" >
-                        <img src={swap ? instance.secondary : instance.primary} className={s.secondary}  />
+                        <img src={swap ? instance.secondary : instance.primary} className={s.secondary} />
                     </Draggable>
                 </div>
                 {
                     !addingmoji ?
                         <div className={s.realmojis}>
-						{
-							instance.realmojis.length > 5 ?
-								<div className={s.nextlast}>
-									<div className={s.add} onClick={() => carouselRef.current?.previous(carouselRef.current.state.currentSlide)}>
-										<FontAwesomeIcon icon={faCaretLeft} />
-									</div>
-								</div>
-								: null
-						}
-						{
-							<Carousel
-								responsive={{
-									main: {
-										breakpoint: {
-											max: 3000,
-											min: 1
-										},
-										items: 5,
-									},
-								}}
-								className={s.carousel}
-								slidesToSlide={2}
-								draggable
-								swipeable
-								renderButtonGroupOutside
-								arrows={false}
-								ref={carouselRef}
-							>
-								{
-									instance.realmojis.map((realmoji) => {
-										return (
-											<Link
-												href={realmoji.owner.uid == localStorage.getItem("uid") ?
-													"/me" : `/profile/${realmoji.owner.uid}`
-												}
-												key={realmoji.emoji_id}
-											>
-												<div className={s.realmoji} key={realmoji.emoji_id}>
-													<div className={s.moji}>{realmoji.emoji}</div>
-													<img 
-														src={realmoji.uri} 
-														title={realmoji.owner.username} 
-													/>
-												</div>
-											</Link>
-										)
-									})
-								}
-							</Carousel>
-						}
-						{
-							instance.realmojis.length > 5 ?
-								<div className={s.nextlast}>
-									<div className={s.add} onClick={() => carouselRef.current?.next(carouselRef.current.state.currentSlide)}>
-										<FontAwesomeIcon icon={faCaretRight} />
-									</div>
-								</div> : null
-						}
-					</div>
+                            {
+                                instance.realmojis.length > 5 ?
+                                    <div className={s.nextlast}>
+                                        <div className={s.add} onClick={() => carouselRef.current?.previous(carouselRef.current.state.currentSlide)}>
+                                            <FontAwesomeIcon icon={faCaretLeft} />
+                                        </div>
+                                    </div>
+                                    : null
+                            }
+                            {
+                                <Carousel
+                                    responsive={{
+                                        main: {
+                                            breakpoint: {
+                                                max: 3000,
+                                                min: 1
+                                            },
+                                            items: 5,
+                                        },
+                                    }}
+                                    className={s.carousel}
+                                    slidesToSlide={2}
+                                    draggable
+                                    swipeable
+                                    renderButtonGroupOutside
+                                    arrows={false}
+                                    ref={carouselRef}
+                                >
+                                    {
+                                        instance.realmojis.map((realmoji) => {
+                                            return (
+                                                <Link
+                                                    href={realmoji.owner.uid == localStorage.getItem("uid") ?
+                                                        "/me" : `/profile/${realmoji.owner.uid}`
+                                                    }
+                                                    key={realmoji.emoji_id}
+                                                >
+                                                    <div className={s.realmoji} key={realmoji.emoji_id}>
+                                                        <div className={s.moji}>{realmoji.emoji}</div>
+                                                        <img
+                                                            src={realmoji.uri}
+                                                            title={realmoji.owner.username}
+                                                        />
+                                                    </div>
+                                                </Link>
+                                            )
+                                        })
+                                    }
+                                </Carousel>
+                            }
+                            {
+                                instance.realmojis.length > 5 ?
+                                    <div className={s.nextlast}>
+                                        <div className={s.add} onClick={() => carouselRef.current?.next(carouselRef.current.state.currentSlide)}>
+                                            <FontAwesomeIcon icon={faCaretRight} />
+                                        </div>
+                                    </div> : null
+                            }
+                        </div>
                         :
                         <div className={s.realmojis}>
                             {/* <div className={s.addmojis}>
@@ -368,7 +368,7 @@ async function getMusicData() {
             <div className={s.comments}>
                 {
                     <div className={s.download}>
-                        <FontAwesomeIcon icon={faDownload} onClick={downloadSecondary}/>
+                        <FontAwesomeIcon icon={faDownload} onClick={downloadSecondary} />
                     </div>
                 }
                 {
@@ -376,9 +376,9 @@ async function getMusicData() {
                         <div className={s.expand} >
                             <span className={s.click} onClick={() => setExpanded(!expanded)}>
                                 {
-                                    !expanded ? 
-                                    <> <FontAwesomeIcon icon={faCaretDown} />  expand comments</>
-                                    : <> <FontAwesomeIcon icon={faCaretUp} />  collapse comments</>}
+                                    !expanded ?
+                                        <> <FontAwesomeIcon icon={faCaretDown} />  expand comments</>
+                                        : <> <FontAwesomeIcon icon={faCaretUp} />  collapse comments</>}
                             </span>
                         </div>
                         :

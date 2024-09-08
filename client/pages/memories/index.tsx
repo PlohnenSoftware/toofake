@@ -3,13 +3,9 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
 import useCheck from '@/utils/check';
-import myself from '@/utils/myself';
 import s from './memories.module.scss'
 import l from '@/styles/loader.module.scss';
-import User from '@/models/user';
-import Link from 'next/link';
 import Memory from '@/models/memory';
-import Draggable from 'react-draggable';
 import Memoire from '@/components/memoire/memoire';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
@@ -58,7 +54,7 @@ export default function Memories() {
                     }
 
                 }
-                console.log("newmemories");
+                console.log("new memories");
                 console.log(newmemories);
 
             }
@@ -92,7 +88,7 @@ export default function Memories() {
                 <div className={s.error}>
                     <p id="error"></p>
                 </div>
-            
+
                 <div>
                     <div>
                         <label>Export both primary and secondary separately</label>
@@ -261,7 +257,7 @@ async function downloadMemories() {
                 }
 
                 // Only save if on last memory
-                if (i == newmemories.length-1) {
+                if (i == newmemories.length - 1) {
 
                     // @ts-ignore: Object is possibly 'null'.
                     status.textContent += `, exporting .zip...`
@@ -297,7 +293,7 @@ async function downloadMemories() {
             console.log(`ERROR: Memory #${i} on ${memoryDate} could not be zipped:\n${e}`);
 
             // Save zip if error was found on the last memory
-            if (i == newmemories.length-1) {
+            if (i == newmemories.length - 1) {
 
                 setTimeout(() => {
                     zip.generateAsync({ type: 'blob' }).then(function (content: any) {
@@ -311,7 +307,7 @@ async function downloadMemories() {
                     downloadButton.disabled = false;
 
                 }, 1000)
-                
+
             } else {
                 continue;
             }

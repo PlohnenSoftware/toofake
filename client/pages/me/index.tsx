@@ -3,11 +3,8 @@ import React from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
 import useCheck from '@/utils/check';
-import myself from '@/utils/myself';
-
 import s from './me.module.scss'
 import l from '@/styles/loader.module.scss';
-import User from '@/models/user';
 import Friend from '@/models/friend';
 import Link from 'next/link';
 
@@ -78,7 +75,7 @@ export default function Me() {
                 let new_friends: Friend[] = [];
 
                 async function createFriend(data: any) {
-                    let newfriend = await Friend.create(data);
+                    let newfriend = Friend.create(data);
                     new_friends.push(newfriend);
                     return newfriend;
                 }
@@ -152,7 +149,7 @@ export default function Me() {
                             return (
                                 <Link href={`/profile/${friend.uid}`} key={friend.uid}>
                                     <div className={s.friend} key={friend.uid}>
-                                        <img src={friend.pfp} className={s.pfp} />
+                                        <img alt="Profile" src={friend.pfp} className={s.pfp} />
                                         <div className={s.details}>
                                             <div className={s.username}>@{friend.username}</div>
                                             <div className={s.fullname}>{friend.fullname}</div>

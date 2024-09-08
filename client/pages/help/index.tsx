@@ -2,12 +2,7 @@ import React from "react";
 
 import s from "./help.module.scss";
 
-/* import { useTranslation } from 'next-i18next' */
-
 export default function Help() {
-
-
-    /* const { t, i18n } = useTranslation() */
 
     return (
         <div className={s.help}>
@@ -88,7 +83,7 @@ export default function Help() {
                 <h2>Common Issues</h2>
             </div>
 
-            
+
 
         </div>
     )

@@ -5,24 +5,16 @@ import axios from 'axios'
 import Instant from '@/components/instant/instant';
 import Instance from '@/models/instance';
 import { useState } from 'react';
-
-import { useRouter } from 'next/router'
-
 import useCheck from '@/utils/check';
-
 import s from './feed.module.scss';
 import l from '@/styles/loader.module.scss';
 import Moji from '@/models/moji';
 
-import Link from 'next/link'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faClose } from "@fortawesome/free-solid-svg-icons";
 
-
+ 
 
 export default function Feed() {
 
-    let router = useRouter();
     if (!useCheck()) {
         return <></>
     }
@@ -36,56 +28,6 @@ export default function Feed() {
         setLoading(true);
         let token = localStorage.getItem("token");
         let body = JSON.stringify({ "token": token });
-
-        /* 
-        old feed api
-        
-        let options = {
-            url: "/api/feed",
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            data: body,
-        }
-
-        axios.request(options).then(
-            async (response) => {
-                
-                console.log("response.data")
-                console.log(response.data);
-                let newinstances: { [key: string]: Instance } = {};
-
-                async function createInstance(data: any) {
-                    let id = data.id;
-                    let newinstance = await Instance.create(data);
-                    newinstances[id] = newinstance;
-                    setLoading(false);
-                }
-
-                for (let i = 0; i < response.data.length; i++) {
-                    try {
-                        await createInstance(response.data[i]);
-                        setInstances({...newinstances});
-                        setLoading(false);
-                    } catch (error) {
-                        console.log("CULDNT MAKE INSTANCE WITH DATA: ", response.data[i])
-                        console.log(error);
-                    }
-                    
-                }
-                console.log("newinstances");
-                console.log(newinstances);
-                setLoading(false);
-            }
-        ).catch(
-            (error) => {
-                console.log("FETCHING ERROR")
-                console.log(error);
-                setLoading(false);
-                setFailure("SOMETHING WENT WRONG: " + JSON.stringify(error.response.data.error));
-                setTimeout(() => {setFailure("")}, 5000);
-            }
-        ) 
-        */
 
         let testoptions = {
             url: "/api/all",
@@ -146,7 +88,7 @@ export default function Feed() {
                         }
                     }
                 }
-                console.log("newfriendinstances");
+                console.log("new friend instances:");
                 console.log(newinstances);
                 setLoading(false);
             }).catch(
@@ -217,28 +159,6 @@ export default function Feed() {
                 : ''
             }
             {
-                /* 
-                    Object.keys(instances).map((key, idx) => {
-                        const elements = [];
-                        elements.push(<Instant key={idx} instance={instances[key]} mymojis={mymojis}/>);
-
-                        if ((idx + 1) % 3 === 2) {
-                            elements.push(
-                                <div className={`${s.ad} ${ad ? '' : s.hide}`}>
-                                    <div className={s.head}>
-                                        advertisment
-                                        <FontAwesomeIcon icon={faClose} className={s.close}
-                                            onClick={closeAds}
-                                        />
-                                    </div>
-                                </div>
-                                );
-                        }
-
-                        return elements;
-                    })  
-                */
-
                 loading ? <div className={l.loader}></div> :
                 (
                     Object.keys(instances).length > 0 ? 

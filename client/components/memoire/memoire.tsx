@@ -40,10 +40,6 @@ export default function Memoire({ memory }: { memory: Memory }) {
         }
     }
 
-    /* useEffect(() => {
-        getLocation();
-    }, []) */
-
     return (
         <div className={s.memory} key={memory.memid}>
             <div className={s.details}>

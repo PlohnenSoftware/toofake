@@ -1,8 +1,7 @@
 
 import s from "./realmoji.module.scss"
 import l from "@/styles/loader.module.scss";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
@@ -72,7 +71,7 @@ export default function Realmoji({ emoji, realmoji }: RealmojiProperties) {
             if (response.ok) {
                 setLoading(false);
                 setSuccess(true);
-                setTimeout(() => { setSuccess(false); router.reload()}, 5000);
+                setTimeout(() => { setSuccess(false); router.reload() }, 5000);
             } else { throw new Error("Error: " + response.statusText); }
         }).catch((error) => {
             console.log(error);
@@ -80,35 +79,6 @@ export default function Realmoji({ emoji, realmoji }: RealmojiProperties) {
             setFailure(true)
             setTimeout(() => { setFailure(false) }, 5000);
         })
-
-        /* const formData = new FormData();
-        formData.append('fileBase64', fileBase64);
-        formData.append('token', authorization_token!);
-        formData.append('emoji', emoji);
-        console.log(formData);
-
-        let options = {
-            url: "/api/add/realmoji",
-            method: "POST",
-            headers: { 'Content-Type': "multipart/form-data" },
-            data: formData,
-        }
-
-        axios.request(options).then(
-            (response) => {
-                console.log(response.data);
-                setLoading(false);
-                setSuccess(true);
-                setTimeout(() => { setSuccess(false); router.reload()}, 5000);
-            }
-        ).catch(
-            (error) => {
-                console.log(error);
-                setLoading(false);
-                setFailure(true)
-                setTimeout(() => { setFailure(false) }, 5000);
-            }
-        ) */
     }
 
     return (
@@ -117,19 +87,19 @@ export default function Realmoji({ emoji, realmoji }: RealmojiProperties) {
 
             {
                 (realmoji[emoji] != undefined)
-                ?
-                    (
-                        isFilePicked ? 
-                        <img src={URL.createObjectURL(selectedFile)} className={s.emoji} /> 
-                        : 
-                        <img src={realmoji[emoji].url} className={s.emoji} />
-                    )
-                :
+                    ?
                     (
                         isFilePicked ?
-                        <img src={URL.createObjectURL(selectedFile)} className={s.emoji} />
-                        :
-                        <div className={s.nomoji}>no realmoji</div>
+                            <img src={URL.createObjectURL(selectedFile)} className={s.emoji} />
+                            :
+                            <img src={realmoji[emoji].url} className={s.emoji} />
+                    )
+                    :
+                    (
+                        isFilePicked ?
+                            <img src={URL.createObjectURL(selectedFile)} className={s.emoji} />
+                            :
+                            <div className={s.nomoji}>no realmoji</div>
                     )
             }
 
@@ -140,18 +110,18 @@ export default function Realmoji({ emoji, realmoji }: RealmojiProperties) {
                     <input id={emoji} type="file" name="file" onChange={fileHandler} />
                     {
                         isFilePicked ?
-                        <button className={s.send} onClick={handleSubmission}>
-                            {
-                                loading ? <div className={l.loadertiny}></div> 
-                                : (
-                                    success ? 
-                                    <FontAwesomeIcon icon={faCheck} className={s.success} /> 
-                                        :
-                                    <FontAwesomeIcon icon={faUpload} />
-                                )
-                            }
-                        </button>
-                        : ""
+                            <button className={s.send} onClick={handleSubmission}>
+                                {
+                                    loading ? <div className={l.loadertiny}></div>
+                                        : (
+                                            success ?
+                                                <FontAwesomeIcon icon={faCheck} className={s.success} />
+                                                :
+                                                <FontAwesomeIcon icon={faUpload} />
+                                        )
+                                }
+                            </button>
+                            : ""
                     }
                 </div>
             </div>

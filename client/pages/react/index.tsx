@@ -3,8 +3,6 @@ import useCheck from "@/utils/check";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-
-import s from "./react.module.scss";
 import l from "@/styles/loader.module.scss";
 
 export default function Reacter() {

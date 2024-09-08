@@ -1,16 +1,9 @@
 
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import axios from 'axios'
 import useCheck from '@/utils/check';
 import myself from '@/utils/myself';
-
-import l from '@/styles/loader.module.scss';
 import s from './realmojis.module.scss'
-
-import User from '@/models/user';
-import Friend from '@/models/friend';
-import Link from 'next/link';
 import Realmoji from '@/components/realmoji/realmoji';
 import Moji from '@/models/moji';
 
